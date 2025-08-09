@@ -1,55 +1,39 @@
-function loadTasks() {
-    const storedTasks = JSON.parse(localStorage.getItem('tasks') || '[]');
-    storedTasks.forEach(taskText => addTask(taskText, false));
-}
+function addTask() {
+    const taskText = taskInput.value.trim();
 
-function addTask(taskText = null, save = true) {
-    const taskInput = document.getElementById('task-input');
-    const taskList = document.getElementById('task-list');
-
-    if (taskText === null) {
-        taskText = taskInput.value.trim();
-    }
     if (taskText === '') {
         alert('Please enter a task.');
         return;
     }
 
+    // Create new list item
     const li = document.createElement('li');
     li.textContent = taskText;
 
+    // Create remove button
     const removeBtn = document.createElement('button');
     removeBtn.textContent = 'Remove';
     removeBtn.className = 'remove-btn';
 
+    // Remove task on button click
     removeBtn.onclick = () => {
         taskList.removeChild(li);
-        const tasks = JSON.parse(localStorage.getItem('tasks') || '[]');
-        const filteredTasks = tasks.filter(task => task !== taskText);
-        localStorage.setItem('tasks', JSON.stringify(filteredTasks));
     };
 
+    // Append remove button to li and li to task list
     li.appendChild(removeBtn);
     taskList.appendChild(li);
 
-    if (save) {
-        const tasks = JSON.parse(localStorage.getItem('tasks') || '[]');
-        tasks.push(taskText);
-        localStorage.setItem('tasks', JSON.stringify(tasks));
-    }
-
+    // Clear input
     taskInput.value = '';
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    const addButton = document.getElementById('add-task-btn');
-    const taskInput = document.getElementById('task-input');
+// Add event listeners
+addButton.addEventListener('click', addTask);
 
-    addButton.addEventListener('click', () => addTask());
-    taskInput.addEventListener('keypress', (event) => {
-        if (event.key === 'Enter') addTask();
-    });
-
-    loadTasks();
+taskInput.addEventListener('keypress', (event) => {
+    if (event.key === 'Enter') {
+        addTask();
+    }
 });
 
